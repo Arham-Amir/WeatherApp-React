@@ -33,11 +33,14 @@ export default function Cities(props = '') {
   useEffect(() => {
     if (!ready) {
       let lsArr = localStorage.getItem('CityNames');
-      if (lsArr) {
+      if (lsArr && lsArr !='[]') {
         lsArr = JSON.parse(lsArr);
         lsArr.forEach((el, i) => {
           getCityWeather(el, i, lsArr.length);
         });
+      }
+      else{
+        setReady(true);
       }
     }
   }, [ready]);
@@ -59,8 +62,8 @@ export default function Cities(props = '') {
           data-testid="loader"
         />
       ) : (
-        <section className={`${props.class} mt-6 mx-auto w-11/12`}>
-          {citiesArr}
+        <section className={`${props.class} relative mt-6 mx-auto w-11/12`}>
+          {citiesArr.length == 0? <p className='absolute top-28 left-28 text-lg text-gray-300 border-dashed border-b-2'>Please Add Cities First !</p>: citiesArr}
         </section>
       )}
     </>
