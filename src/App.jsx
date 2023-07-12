@@ -10,9 +10,6 @@ import SelectedCityInfo from './Components/Cities/selectedCityInfo.jsx'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import DotLoader from "react-spinners/DotLoader.js";
 
-function getCity() {
-
-}
 
 export default function App() {
   const API_KEY = "3c42e01c0cf5437c928feb081ca04486";
@@ -26,20 +23,32 @@ export default function App() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           resolve([position.coords.latitude, position.coords.longitude]);
+        }, (e)=>{
+          alert("This website is unable to access your current location.")
+          resolve([31.5204, 74.3587]);
         });
       } else {
-        console.log("Geolocation is not supported by this browser.");
         reject(new Error("Geolocation is not supported"));
       }
     });
   }
 
   async function getCurrentWeather() {
+    setSCity(null);
     const [lat, long] = await getLocation();
-    let resp = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&appid=${API_KEY}`)
-      .then((response) => response.json());
-    setCurrLoc(resp);
-    setLoading(false);
+    try {
+      let resp = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${long}&appid=${API_KEY}`);
+      if (!resp.ok) {
+        throw new Error('Your must allow the current location setting. !!!')
+      }
+      resp = await resp.json();
+      setCurrLoc(resp);
+      setLoading(false);
+    }
+    catch (e) {
+      console.log(e)
+    }
+
   }
   async function getCityWeather() {
     let resp = null;
@@ -111,17 +120,11 @@ export default function App() {
               </Route>
               <Route exact path="/cities">
                 <Navbar active={'Cities'} class="lg:basis-1/7 lg:static 2xl:basis-1/7 sm:fixed sm:bottom-0 z-10"></Navbar>
-                <AddedCities city={sCity} setSCity={setSCity} selectedCity={selectedCity} setSelectedCity={setSelectedCity} class="basis-4/7 "></AddedCities>
+                <AddedCities setBtnPress={setBtnPress} btnPress={btnPress} city={sCity} setSCity={setSCity} selectedCity={selectedCity} setSelectedCity={setSelectedCity} class="basis-4/7 "></AddedCities>
                 {!selectedCity ?
-                  <DotLoader
-                    color={`#ffffff`}
-                    loading={true}
-                    aria-label="Loading Spinner"
-                    size={150}
-                    data-testid="loader"
-                  />
+                  null
                   :
-                  <SelectedCityInfo loc={selectedCity} class="basis-2/7 sm:mb-[7rem] lg:mb-0"></SelectedCityInfo>
+                  <SelectedCityInfo setSelectedCity={setSelectedCity} loc={selectedCity} class="basis-2/7 sm:mb-[7rem] lg:mb-0"></SelectedCityInfo>
                 }
               </Route>
             </Switch>

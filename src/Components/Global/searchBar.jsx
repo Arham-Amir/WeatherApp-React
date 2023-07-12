@@ -8,7 +8,7 @@ export default function Search(props = '') {
   const history = useHistory();
 
   function searchCity() {
-    props.setSCity(searchInput.current.value);
+    props.setSCity(searchInput.current?.value );
     history.push(`/Search/${searchInput.current?.value}`);
   }
   window.addEventListener('keyup', (e) => {

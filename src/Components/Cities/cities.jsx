@@ -33,13 +33,13 @@ export default function Cities(props = '') {
   useEffect(() => {
     if (!ready) {
       let lsArr = localStorage.getItem('CityNames');
-      if (lsArr && lsArr !='[]') {
+      if (lsArr && lsArr != '[]') {
         lsArr = JSON.parse(lsArr);
         lsArr.forEach((el, i) => {
           getCityWeather(el, i, lsArr.length);
         });
       }
-      else{
+      else {
         setReady(true);
       }
     }
@@ -63,7 +63,7 @@ export default function Cities(props = '') {
         />
       ) : (
         <section className={`${props.class} relative mt-6 mx-auto w-11/12`}>
-          {citiesArr.length == 0? <p className='absolute top-28 left-28 text-lg text-gray-300 border-dashed border-b-2'>Please Add Cities First !</p>: citiesArr}
+          {citiesArr.length == 0 ? <p className='absolute top-28 left-28 text-lg text-gray-300 border-dashed border-b-2'>Please Add Cities First !</p> : citiesArr}
         </section>
       )}
     </>
@@ -96,11 +96,6 @@ function City(props = '') {
   }
   function showCity(event) {
     let p = event.target.previousElementSibling.innerHTML;
-    let secs = document.querySelectorAll('.city');
-    secs.forEach((el) => {
-      el.style.backgroundColor = 'rgb(55, 65, 81)';
-    });
-    event.target.parentElement.parentElement.parentElement.style.backgroundColor = `rgb(3 105 161)`;
     let arr = props.locations.filter((function (el) {
       return el.city.name == p;
     }))
