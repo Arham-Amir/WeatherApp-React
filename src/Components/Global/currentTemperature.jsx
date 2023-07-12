@@ -53,7 +53,7 @@ function Information(props = '') {
 function Icon(props = '') {
   const [icon, setIcon] = useState(Sunny);
   useEffect(() => {
-    if (props.loc.list[0].weather[0].main === "Clouds") {
+    if (props.loc.list[0].weather[0].main === "Clouds" || props.loc.list[0].weather[0].main === "Clear") {
       setIcon(Cloudy);
     } else if (props.loc.list[0].weather[0].main === "Rain") {
       setIcon(Rainy);
